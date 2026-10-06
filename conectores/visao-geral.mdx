@@ -1,0 +1,81 @@
+---
+title: "Conectores"
+description: "Dê ao agente acesso controlado aos sistemas da sua empresa."
+---
+
+Conectores ligam o agente às ferramentas que sua empresa já usa. Cada conector libera um conjunto pequeno e específico de ações, como *"registrar lead no ClickUp"*, e nunca acesso irrestrito ao sistema.
+
+## Como funciona
+
+<Steps>
+  <Step title="Conecte a integração">
+    Em **Funcionários IA → Conectores**, escolha o agente, clique no conector e autorize (login da conta ou chave de API, conforme o sistema).
+  </Step>
+  <Step title="Configure no próprio conector">
+    Toda configuração fica na janela do conector: lista de destino, permissões, canais, intervalo de sincronização. O botão **?** de cada conector traz um tutorial.
+  </Step>
+  <Step title="O agente ganha as ferramentas">
+    As ferramentas do conector passam a valer para **aquele agente** e o prompt de ferramentas é atualizado automaticamente. Outro agente da mesma empresa só ganha acesso se você conectar nele também.
+  </Step>
+</Steps>
+
+<Note>
+  Desconectar um conector remove as ferramentas do agente imediatamente.
+</Note>
+
+## Conectores disponíveis
+
+### Canais
+| Conector | Para que serve |
+|---|---|
+| WhatsApp | Atendimento pelo WhatsApp (oficial ou QR code). Veja [WhatsApp](/canais/whatsapp). |
+| Telegram | Atendimento por bot do Telegram |
+| Slack | Mensagens internas e conversa com o agente. Veja [Slack](/canais/slack). |
+
+### CRM e vendas
+| Conector | Para que serve |
+|---|---|
+| Gestão de Leads | CRM nativo: registra prospectos, atualiza estágio do funil e faz follow-up |
+| ClickUp | Cria e atualiza tarefas e leads em listas escolhidas |
+| HubSpot | Contatos, negócios e pipeline |
+| Pipedrive | Negócios e atividades comerciais |
+| CRM Genérico | Seu CRM próprio via API |
+
+### Produtividade e comunicação
+| Conector | Para que serve |
+|---|---|
+| Gmail | Ler e enviar e-mails |
+| E-mail SMTP | Enviar e-mails pelo servidor da sua empresa |
+| Google Calendar | Consultar disponibilidade e criar reuniões |
+| Notion | Ler e escrever em páginas e bases |
+
+### Documentos e dados
+| Conector | Para que serve |
+|---|---|
+| Google Drive, Docs e Sheets | Consultar arquivos e ler e atualizar planilhas |
+| SharePoint | Arquivos de um site do SharePoint |
+| Supabase Storage | Arquivos de um bucket do Supabase |
+| Google Analytics | Métricas do seu site |
+
+### Setores específicos
+| Conector | Para que serve |
+|---|---|
+| Catálogo de Imóveis | Importa imóveis (JSON, CSV ou Excel) para busca com filtros |
+| WordPress Imóveis | Sincroniza imóveis de um site WordPress |
+| Simulação de Crédito | Simula financiamento imobiliário (SAC), incluindo Minha Casa Minha Vida |
+
+### Automação
+| Conector | Para que serve |
+|---|---|
+| Webhook Outbound | Envia eventos para n8n, Make ou sistemas próprios |
+| Webhook Inbound | Recebe eventos de outros sistemas e aciona o agente |
+| Helpdesk Genérico | Tickets e SLA via API própria |
+
+Outros conectores aparecem como **Em breve** no painel. Precisa de uma integração específica? Fale com o [suporte](https://frontend-veronica.caprover.veronica-ai.com.br/apps/support).
+
+## Segurança
+
+- Cada agente só vê as ferramentas dos conectores ligados a ele.
+- Credenciais ficam guardadas de forma segura e nunca aparecem para o agente nem nas conversas.
+- Ações sensíveis podem exigir aprovação de um humano.
+- Toda ação executada fica registrada.

@@ -1,33 +1,32 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
+# Instruções para agentes de IA neste repositório
 
-# Documentation project instructions
+## Sobre o projeto
 
-## About this project
+- Documentação pública da **Veronica IA**, publicada pelo [Mintlify](https://mintlify.com).
+- Páginas em MDX com frontmatter YAML; configuração em `docs.json`.
+- A referência da API é gerada de `api/openapi.json`.
+- Todo push na `main` publica em produção.
 
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
-- Configuration lives in `docs.json`
-- Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
-- Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
+## Público
 
-## Terminology
+- Aba **Guias**: clientes (empresas) que usam o painel. Linguagem simples, sem jargão técnico.
+- Aba **API**: desenvolvedores que integram sistemas.
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+## Terminologia
 
-## Style preferences
+- "Funcionário IA" ou "agente". Nunca "bot" ou "chatbot".
+- "Empresa", não "tenant", nos guias.
+- "Conector" para integrações.
+- "Chave de IA" para a chave do provedor (BYOK).
+- Não existem créditos de IA: o cliente paga o provedor direto e a Veronica IA cobra por vaga de agente.
+- Nunca citar OpenClaw, MCP, MongoDB, Qdrant ou nomes internos de infraestrutura.
 
-{/* Add any project-specific style rules below */}
+## Estilo
 
-- Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
-- Use sentence case for headings
-- Bold for UI elements: Click **Settings**
-- Code formatting for file names, commands, paths, and code references
+- Português do Brasil, com acentuação correta.
+- Segunda pessoa ("você"), voz ativa, uma ideia por frase.
+- Nomes de botões e telas em **negrito**, exatamente como aparecem no painel.
 
-## Content boundaries
+## Segurança
 
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+O repositório é público. Nunca incluir segredos, tokens, IDs reais de agentes ou empresas, URLs internas ou detalhes de endpoints administrativos.

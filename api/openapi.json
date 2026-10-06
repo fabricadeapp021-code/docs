@@ -1,0 +1,534 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Veronica IA API",
+    "version": "1.0.0",
+    "description": "API da Veronica IA para conversar com agentes, gerenciar leads e documentos."
+  },
+  "servers": [
+    { "url": "https://api-veronica.caprover.veronica-ai.com.br", "description": "Produção" }
+  ],
+  "security": [{ "bearerAuth": [] }],
+  "tags": [
+    { "name": "Autenticação" },
+    { "name": "Agentes" },
+    { "name": "Canal Web (público)" },
+    { "name": "Leads" },
+    { "name": "Documentos" }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Login",
+        "description": "Troca e-mail e senha de um usuário da sua empresa por um token de acesso (7 dias) e um refresh token (30 dias).",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "integracao@suaempresa.com.br" },
+                  "password": { "type": "string", "minLength": 6, "example": "sua-senha" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Renovar token",
+        "description": "Troca um refresh token válido por um novo par de tokens.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["refresh_token"],
+                "properties": { "refresh_token": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tokens renovados", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } },
+          "401": { "description": "Refresh token inválido ou expirado" }
+        }
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "tags": ["Autenticação"],
+        "summary": "Usuário atual",
+        "description": "Retorna o usuário dono do token.",
+        "responses": {
+          "200": { "description": "Perfil do usuário" },
+          "401": { "description": "Token inválido" }
+        }
+      }
+    },
+    "/agents": {
+      "get": {
+        "tags": ["Agentes"],
+        "summary": "Listar agentes",
+        "description": "Lista os agentes ativos da sua empresa. Use o `id` retornado nos endpoints de chat.",
+        "responses": {
+          "200": {
+            "description": "Lista de agentes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "providerKeys": { "type": "array", "items": { "type": "string" }, "description": "Conectores ativos no agente" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/{id}": {
+      "get": {
+        "tags": ["Agentes"],
+        "summary": "Detalhar agente",
+        "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+        "responses": {
+          "200": { "description": "Agente" },
+          "404": { "description": "Agente não encontrado na sua empresa" }
+        }
+      }
+    },
+    "/agents/{id}/chat": {
+      "post": {
+        "tags": ["Agentes"],
+        "summary": "Enviar mensagem",
+        "description": "Envia uma mensagem ao agente e aguarda a resposta completa. Use o mesmo `sessionKey` para continuar a conversa.",
+        "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                  "message": { "type": "string", "example": "Quais imóveis de 2 quartos vocês têm na Barra?" },
+                  "sessionKey": { "type": "string", "description": "Identificador da conversa. Omita para iniciar uma nova.", "example": "pedido-1234" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resposta do agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agentId": { "type": "string" },
+                    "message": { "type": "string" },
+                    "reply": { "type": "string" },
+                    "model": { "type": "string" },
+                    "sessionKey": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Agente não encontrado na sua empresa" }
+        }
+      }
+    },
+    "/agents/{id}/chat-stream": {
+      "post": {
+        "tags": ["Agentes"],
+        "summary": "Enviar mensagem (streaming)",
+        "description": "Igual ao chat, mas responde com Server-Sent Events: `thinking`, depois `complete` (`content`, `sessionKey`, `model`) ou `error`. Veja o guia de Streaming.",
+        "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                  "message": { "type": "string" },
+                  "sessionId": { "type": "string", "description": "Identificador da conversa." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Fluxo de eventos", "content": { "text/event-stream": { "schema": { "type": "string" } } } }
+        }
+      }
+    },
+    "/public/agents/{agentId}/chat": {
+      "post": {
+        "tags": ["Canal Web (público)"],
+        "summary": "Chat do Canal Web",
+        "description": "Endpoint público para o chat do seu site. Exige o Canal Web ligado no agente e a origem da requisição (`Origin`) na lista de domínios permitidos. Limite: 1.200 caracteres por mensagem e 12 mensagens por minuto por `sessionId`.",
+        "security": [],
+        "parameters": [{ "name": "agentId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PublicChatRequest" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Resposta do agente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agentId": { "type": "string" },
+                    "agentName": { "type": "string" },
+                    "sessionId": { "type": "string" },
+                    "reply": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Mensagem vazia ou com mais de 1.200 caracteres" },
+          "403": { "description": "Domínio não autorizado para este agente" },
+          "429": { "description": "Limite de mensagens por minuto atingido" },
+          "503": { "description": "Agente indisponível ou Canal Web desligado" }
+        }
+      }
+    },
+    "/public/agents/{agentId}/chat-stream": {
+      "post": {
+        "tags": ["Canal Web (público)"],
+        "summary": "Chat do Canal Web (streaming)",
+        "description": "Igual ao chat do Canal Web, com Server-Sent Events: `thinking`, vários `token` (`delta`), e `complete` (`reply`, `sessionId`, `agentName`) ou `error`. Erros de validação, domínio e limite chegam como evento `error`.",
+        "security": [],
+        "parameters": [{ "name": "agentId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PublicChatRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Fluxo de eventos", "content": { "text/event-stream": { "schema": { "type": "string" } } } }
+        }
+      }
+    },
+    "/crm/leads": {
+      "get": {
+        "tags": ["Leads"],
+        "summary": "Buscar leads",
+        "parameters": [
+          { "name": "name", "in": "query", "schema": { "type": "string" }, "description": "Parte do nome" },
+          { "name": "phoneNumber", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" }, "description": "Estágio do funil" },
+          { "name": "minScore", "in": "query", "schema": { "type": "number", "minimum": 0 } },
+          { "name": "diasSemContato", "in": "query", "schema": { "type": "number", "minimum": 0 }, "description": "Leads sem contato há pelo menos N dias" },
+          { "name": "agentId", "in": "query", "schema": { "type": "string" }, "description": "Somente leads de um agente" },
+          { "name": "limit", "in": "query", "schema": { "type": "number", "minimum": 1 } }
+        ],
+        "responses": { "200": { "description": "Leads encontrados" } }
+      },
+      "post": {
+        "tags": ["Leads"],
+        "summary": "Criar ou atualizar lead",
+        "description": "Cria um lead. Se já existir um lead com o mesmo telefone na sua empresa, ele é atualizado.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LeadInput" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "Lead salvo",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "lead": { "$ref": "#/components/schemas/Lead" } } } } }
+          },
+          "400": { "description": "Dados inválidos" }
+        }
+      }
+    },
+    "/crm/leads/{id}": {
+      "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+      "get": {
+        "tags": ["Leads"],
+        "summary": "Detalhar lead",
+        "responses": {
+          "200": { "description": "Lead", "content": { "application/json": { "schema": { "type": "object", "properties": { "success": { "type": "boolean" }, "data": { "$ref": "#/components/schemas/Lead" } } } } } },
+          "404": { "description": "Lead não encontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Leads"],
+        "summary": "Atualizar lead",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LeadInput" } } }
+        },
+        "responses": {
+          "200": { "description": "Lead atualizado", "content": { "application/json": { "schema": { "type": "object", "properties": { "success": { "type": "boolean" }, "data": { "$ref": "#/components/schemas/Lead" } } } } } },
+          "404": { "description": "Lead não encontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Leads"],
+        "summary": "Excluir lead",
+        "responses": {
+          "200": { "description": "Excluído", "content": { "application/json": { "schema": { "type": "object", "properties": { "success": { "type": "boolean" } } } } } },
+          "404": { "description": "Lead não encontrado" }
+        }
+      }
+    },
+    "/crm/leads/{id}/stage": {
+      "patch": {
+        "tags": ["Leads"],
+        "summary": "Mudar estágio do funil",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "required": ["status"], "properties": { "status": { "type": "string", "example": "qualificado" } } }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Lead atualizado" } }
+      }
+    },
+    "/crm/leads/import": {
+      "post": {
+        "tags": ["Leads"],
+        "summary": "Importar planilha de leads",
+        "description": "Importa leads de um arquivo CSV ou XLSX (até 5 MB). A coluna `tags` é obrigatória; `nome`, `telefone` e `email` são recomendadas; `status`, `empresa` e `score` são opcionais. Use `dryRun=true` para só analisar (novos x repetidos) sem gravar.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file", "agentId"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "agentId": { "type": "string", "description": "Agente responsável pelos leads" },
+                  "dryRun": { "type": "string", "enum": ["true", "false"], "default": "false" },
+                  "onDuplicate": { "type": "string", "enum": ["update", "ignore"], "default": "update", "description": "O que fazer com telefones que já existem" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Resultado da importação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imported": { "type": "integer" },
+                    "updated": { "type": "integer" },
+                    "ignored": { "type": "integer" },
+                    "total": { "type": "integer" },
+                    "errors": { "type": "array", "items": {} },
+                    "warnings": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents": {
+      "get": {
+        "tags": ["Documentos"],
+        "summary": "Listar documentos",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20, "maximum": 100 } },
+          { "name": "sortOrder", "in": "query", "schema": { "type": "string", "enum": ["asc", "desc"], "default": "desc" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de documentos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "documents": { "type": "array", "items": { "$ref": "#/components/schemas/Document" } },
+                    "total": { "type": "integer" },
+                    "page": { "type": "integer" },
+                    "limit": { "type": "integer" },
+                    "totalPages": { "type": "integer" },
+                    "hasMore": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/upload": {
+      "post": {
+        "tags": ["Documentos"],
+        "summary": "Enviar documento",
+        "description": "Envia um arquivo para a base de conhecimento da sua empresa. Ele é indexado em segundo plano e usado pelos agentes com RAG ligado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "title": { "type": "string" },
+                  "category": { "type": "string" },
+                  "description": { "type": "string" },
+                  "tags": { "type": "string", "description": "Separadas por vírgula" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Documento criado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Document" } } } }
+        }
+      }
+    },
+    "/documents/{id}": {
+      "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+      "get": {
+        "tags": ["Documentos"],
+        "summary": "Detalhar documento",
+        "responses": {
+          "200": { "description": "Documento", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Document" } } } },
+          "404": { "description": "Documento não encontrado" }
+        }
+      },
+      "delete": {
+        "tags": ["Documentos"],
+        "summary": "Excluir documento",
+        "description": "Remove o documento e o conteúdo dele deixa de ser usado pelos agentes.",
+        "responses": {
+          "200": { "description": "Excluído" },
+          "404": { "description": "Documento não encontrado" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token obtido em POST /auth/login"
+      }
+    },
+    "parameters": {
+      "AgentId": { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "ID do agente (veja GET /agents)" }
+    },
+    "schemas": {
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" },
+          "refresh_token": { "type": "string" },
+          "token_type": { "type": "string", "example": "Bearer" },
+          "expires_in": { "type": "integer", "example": 604800 },
+          "refresh_expires_in": { "type": "integer", "example": 2592000 },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "email": { "type": "string" },
+              "tenantId": { "type": "string" },
+              "role": { "type": "string" }
+            }
+          }
+        }
+      },
+      "PublicChatRequest": {
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "message": { "type": "string", "maxLength": 1200, "example": "Quais planos vocês têm?" },
+          "sessionId": { "type": "string", "description": "Identificador aleatório da conversa do visitante (ex.: crypto.randomUUID()). Omita para iniciar uma nova." }
+        }
+      },
+      "LeadInput": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "Maria Souza" },
+          "phoneNumber": { "type": "string", "example": "5521999990000" },
+          "emailAddress": { "type": "string", "format": "email" },
+          "company": { "type": "string" },
+          "status": { "type": "string", "description": "Estágio do funil" },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "tags": { "type": "array", "items": { "type": "string" }, "example": ["feirao-outubro"] },
+          "whatsappConsent": { "type": "boolean", "description": "O lead autorizou contato por WhatsApp" },
+          "whatsappConsentAt": { "type": "string", "format": "date-time" },
+          "whatsappConsentSource": { "type": "string", "example": "formulario-site" },
+          "metadata": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "Lead": {
+        "allOf": [
+          { "$ref": "#/components/schemas/LeadInput" },
+          {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "agentId": { "type": "string" },
+              "createdAt": { "type": "string", "format": "date-time" },
+              "updatedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        ]
+      },
+      "Document": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "category": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "originalName": { "type": "string" },
+          "mimeType": { "type": "string" },
+          "size": { "type": "integer" },
+          "uploadedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

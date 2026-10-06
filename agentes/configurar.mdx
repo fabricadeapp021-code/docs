@@ -1,0 +1,51 @@
+---
+title: "Configurar o agente"
+description: "Dados do colaborador, capacidades, modelo de IA e quem pode conversar com ele."
+---
+
+Clique em um agente em **Funcionários IA** para abrir o perfil dele.
+
+## Dados do colaborador
+
+Nome, cargo, telefone e responsável. É assim que o agente aparece no seu time e, no caso do nome, como ele se apresenta (junto com o prompt de identidade).
+
+## Modelo de IA
+
+Escolha qual modelo o agente usa entre os disponíveis na sua [chave de IA](/conta/chaves-de-ia). Modelos maiores costumam seguir regras complexas com mais fidelidade. Modelos menores são mais rápidos e mais baratos.
+
+## Capacidades
+
+Na seção **Capacidades do agente**, cada recurso tem um interruptor. Tudo começa desligado:
+
+| Capacidade | O que faz |
+|---|---|
+| **RAG — Base de Conhecimento** | Responde com base nos documentos enviados. Veja [Documentos](/conhecimento/documentos). |
+| **Pesquisa Web** | Busca informações atualizadas na internet. |
+| **Leitura de Imagem** | Entende fotos enviadas pelo cliente. |
+| **OCR — Transcrição de Manuscrito** | Transcreve texto escrito à mão em fotos. |
+| **Follow-up Automático** | Retoma conversas com clientes que pararam de responder. |
+| **Venda Ativa (Outbound)** | Permite que o agente inicie conversas com leads (por exemplo, a partir de campanhas). |
+| **Registrar lead automático na campanha** | Cadastra como lead quem responde a uma campanha. |
+| **Colaboração entre agentes** | Permite pedir ajuda a outros agentes da empresa. Veja [Colaboração](/agentes/colaboracao). |
+
+## Quem pode conversar com o agente
+
+O **modo de acesso** define quem recebe resposta:
+
+<CardGroup cols={3}>
+  <Card title="Público" icon="globe">
+    Qualquer número pode conversar. Ideal para atendimento e vendas.
+  </Card>
+  <Card title="Whitelist" icon="list-check">
+    Só os contatos que você autorizar. Ideal para clientes específicos.
+  </Card>
+  <Card title="Privado" icon="lock">
+    Só funcionários da sua empresa. Ideal para agentes internos.
+  </Card>
+</CardGroup>
+
+Em Whitelist e Privado, adicione os números autorizados em **Adicionar contato**.
+
+## Métricas e avaliações
+
+O perfil mostra conversas e uso diário do agente. Em **Avaliações**, você pode lançar uma avaliação automática: um agente "juiz" lê as conversas de um período e dá nota segundo o critério que você definir. Exemplo: *"O agente coletou nome, e-mail e empresa do lead antes de oferecer a reunião?"*

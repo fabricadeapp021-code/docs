@@ -1,0 +1,81 @@
+---
+title: "Chat em tempo real (streaming)"
+description: "Receba a resposta do agente conforme ela é gerada, via Server-Sent Events."
+---
+
+Os endpoints `chat-stream` respondem com **Server-Sent Events** (`text/event-stream`). Cada evento é uma linha `data:` com um JSON:
+
+```text
+data: {"type":"thinking","timestamp":1759680000000}
+
+data: {"type":"token","delta":"Olá! ","timestamp":1759680000400}
+
+data: {"type":"token","delta":"Como posso ajudar?","timestamp":1759680000500}
+
+data: {"type":"complete","reply":"Olá! Como posso ajudar?","sessionId":"widget-3f2a...","timestamp":1759680000900}
+```
+
+| Evento | Quando | Campos |
+|---|---|---|
+| `thinking` | Logo que a requisição chega | `timestamp` |
+| `token` | A cada trecho gerado (Canal Web) | `delta` |
+| `complete` | Resposta final | Canal Web: `reply`, `sessionId`, `agentName`. Autenticado: `content`, `sessionKey`, `model` |
+| `error` | Falha | `error` |
+
+Linhas que começam com `:` são *heartbeats* para manter a conexão aberta. Ignore-as.
+
+## Canal Web: seu próprio chat
+
+Use o endpoint público para construir a sua interface no lugar do [widget pronto](/canais/canal-web).
+
+<Steps>
+  <Step title="Ligue o Canal Web e libere o domínio">
+    No painel, ative o Canal Web do agente e adicione o domínio do seu site em **Domínios permitidos**. A API confere o cabeçalho `Origin` do navegador.
+  </Step>
+  <Step title="Gere um sessionId por visitante">
+    Gere um identificador aleatório e impossível de adivinhar (ex.: `crypto.randomUUID()`) e guarde no navegador. Ele mantém o histórico da conversa. Quem tiver o `sessionId` continua a mesma conversa.
+  </Step>
+  <Step title="Envie mensagens">
+    ```javascript
+    const res = await fetch(
+      `https://api-veronica.caprover.veronica-ai.com.br/public/agents/${agentId}/chat-stream`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: "Quais planos vocês têm?", sessionId }),
+      }
+    );
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const events = buffer.split("\n\n");
+      buffer = events.pop();
+      for (const raw of events) {
+        if (!raw.startsWith("data: ")) continue;
+        const event = JSON.parse(raw.slice(6));
+        if (event.type === "token") appendToBubble(event.delta);
+        if (event.type === "complete") finishBubble(event.reply);
+        if (event.type === "error") showError(event.error);
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+### Limites do Canal Web
+
+- Mensagem de até **1.200 caracteres**.
+- Até **12 mensagens por minuto** por `sessionId`.
+- Só responde em domínios da lista de **Domínios permitidos**.
+
+No endpoint sem streaming (`/public/agents/{agentId}/chat`), essas violações voltam como status HTTP: `400` (mensagem vazia ou longa demais), `429` (limite por minuto) e `403` (domínio não autorizado). No `chat-stream`, a conexão já foi aberta com status `200`, então elas chegam como um evento `{"type":"error"}`. Trate esse evento sempre.
+
+## Chat autenticado
+
+Para integrar a partir do seu servidor (sem Canal Web), use `POST /agents/{id}/chat` ou `POST /agents/{id}/chat-stream` com o [token de acesso](/api/autenticacao). Envie um `sessionKey` (ou `sessionId` no streaming) para manter a conversa. As conversas criadas assim pertencem ao usuário do token.

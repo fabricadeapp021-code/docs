@@ -1,0 +1,39 @@
+---
+title: "Documentos e base de conhecimento"
+description: "Ensine o agente com os documentos da sua empresa."
+---
+
+A base de conhecimento faz o agente responder com base no **seu** material (catálogos, políticas, FAQs, contratos, manuais) em vez de responder só com o que o modelo de IA sabe.
+
+## Enviar documentos
+
+<Steps>
+  <Step title="Abra Documentos">
+    No menu, clique em **Documentos** e em enviar.
+  </Step>
+  <Step title="Preencha e envie">
+    Escolha o **arquivo**, dê um **título** e uma **categoria**. Descrição e tags são opcionais e ajudam a organizar.
+  </Step>
+  <Step title="Aguarde a indexação">
+    Quando aparecer *"Documento indexado no RAG"*, o agente já pode usar o conteúdo.
+  </Step>
+</Steps>
+
+Você também pode enviar documentos direto pelo [playground](/agentes/playground) do agente.
+
+**Formatos aceitos:** PDF, DOCX, XLSX, TXT, MD, JSON, JPEG e PNG, até 50 MB por arquivo.
+
+## Ativar no agente
+
+A base de conhecimento só é usada pelos agentes com a capacidade **RAG — Base de Conhecimento** ligada. Isso evita que um agente interno e um agente de atendimento compartilhem material por acidente.
+
+## Dicas para bons resultados
+
+- **Um assunto por documento.** "Política de trocas.pdf" funciona melhor que um manual de 300 páginas sobre tudo.
+- **Texto, não imagem de texto.** PDFs escaneados funcionam, mas PDFs com texto selecionável são mais precisos.
+- **Mantenha atualizado.** Ao mudar uma política, exclua o documento antigo. O conteúdo excluído deixa de ser usado pelo agente.
+- **Perguntas e respostas.** Um FAQ no formato pergunta → resposta é o material que dá respostas mais precisas.
+
+## Catálogos estruturados
+
+Para listas grandes com filtros (imóveis, produtos), use um conector de catálogo em vez de documentos. O agente consegue filtrar por preço, bairro, tipo etc. com precisão. Veja [Conectores](/conectores/visao-geral).

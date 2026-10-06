@@ -1,0 +1,55 @@
+---
+title: "Chaves de IA"
+description: "Use a sua própria chave de IA (BYOK) para rodar os agentes."
+---
+
+A Veronica IA não revende IA. Os agentes rodam com a **chave do seu provedor**, e o custo de uso do modelo é cobrado direto pelo provedor na sua conta, sem margem nem créditos intermediários.
+
+## Provedores suportados
+
+| Provedor | Formato da chave |
+|---|---|
+| OpenAI | `sk-proj-...` ou `sk-...` |
+| Anthropic (Claude) | `sk-ant-...` |
+| Google Gemini | `AIza...` |
+| Grok (xAI) | `xai-...` |
+| Groq | `gsk_...` |
+| DeepSeek | `sk-...` |
+| Compatível com OpenAI | Qualquer endpoint no padrão OpenAI (informe a URL) |
+
+## Cadastrar uma chave
+
+<Steps>
+  <Step title="Abra Chaves de IA">
+    No painel, vá em **Configurações → Chaves de IA** e clique em **Nova chave de IA**.
+  </Step>
+  <Step title="Preencha">
+    Escolha o **provedor**, dê um **título** (ex.: *OpenAI produção*) e cole a **chave**.
+  </Step>
+  <Step title="Teste">
+    Clique em **Testar conexão**. O teste faz uma chamada real e pode consumir alguns tokens.
+  </Step>
+  <Step title="Defina a principal">
+    Marque **Definir como configuração principal** para que os agentes usem essa chave por padrão.
+  </Step>
+</Steps>
+
+## Status da chave
+
+| Status | O que fazer |
+|---|---|
+| Validada / Chave aceita | Tudo certo |
+| Chave inválida | Confira se copiou a chave inteira |
+| Cota excedida | Adicione saldo na conta do provedor |
+| Limite de requisições | Muitas chamadas ao mesmo tempo. Aguarde ou peça aumento de limite ao provedor |
+| Modelo incompatível | Escolha outro modelo para a chave |
+| Sem permissão | A chave não tem acesso ao modelo escolhido |
+| Provedor indisponível | Instabilidade no provedor. Tente de novo em alguns minutos |
+
+## Base de conhecimento
+
+A indexação de documentos (RAG) usa embeddings da OpenAI (`text-embedding-3-small`). Para usar a base de conhecimento, cadastre uma chave **OpenAI**, mesmo que os agentes conversem com outro provedor.
+
+## Avisos por WhatsApp
+
+Na mesma tela, você pode ativar avisos por WhatsApp para a sua equipe, por exemplo **quando entra um novo lead** ou **quando o agente precisa de atendimento humano**.

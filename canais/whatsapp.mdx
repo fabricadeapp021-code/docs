@@ -1,0 +1,65 @@
+---
+title: "WhatsApp"
+description: "Conecte um número de WhatsApp ao seu agente."
+---
+
+Cada agente pode ter o **seu próprio número** de WhatsApp. Há duas formas de conectar.
+
+<CardGroup cols={2}>
+  <Card title="WhatsApp Business API (oficial)" icon="badge-check">
+    Conta oficial da Meta. Recomendado para atendimento e campanhas em escala.
+  </Card>
+  <Card title="WhatsApp não oficial (QR code)" icon="qrcode">
+    Conecta um número comum lendo um QR code. Mais rápido de configurar, com risco de bloqueio.
+  </Card>
+</CardGroup>
+
+## WhatsApp Business API (oficial)
+
+Você precisa de uma conta WhatsApp Business na Meta com um número verificado.
+
+<Steps>
+  <Step title="Abra os conectores">
+    Em **Funcionários IA → Conectores**, escolha o agente e clique em **WhatsApp**.
+  </Step>
+  <Step title="Informe os dados da Meta">
+    Preencha o **Phone Number ID**, o ID da conta WhatsApp Business e o **Access Token** do usuário do sistema, todos obtidos no Gerenciador de Negócios da Meta.
+  </Step>
+  <Step title="Confirme a conexão">
+    O status muda para conectado. A partir daí, mensagens recebidas nesse número são respondidas pelo agente.
+  </Step>
+</Steps>
+
+### Modelos de mensagem (templates)
+
+Para iniciar uma conversa (por exemplo, em [campanhas](/vendas/campanhas)) ou falar com alguém depois de 24 horas sem resposta, o WhatsApp exige um **modelo de mensagem aprovado pela Meta**. Gerencie os modelos na aba **Templates** do agente.
+
+## WhatsApp não oficial (QR code)
+
+<Warning>
+  O WhatsApp não oficial usa um número comum, fora da API oficial da Meta. Números que enviam muitas mensagens para quem não os tem salvos podem ser **banidos**. Use com moderação e prefira a API oficial para volume.
+</Warning>
+
+<Steps>
+  <Step title="Crie a conexão">
+    No conector do agente, escolha a opção não oficial, dê um nome à conexão (ex.: *Número comercial*) e aceite o aviso de risco.
+  </Step>
+  <Step title="Leia o QR code">
+    No celular, abra o WhatsApp → **Aparelhos conectados** → **Conectar um aparelho** e leia o QR code exibido.
+  </Step>
+  <Step title="Pronto">
+    O status muda para **Conectado**.
+  </Step>
+</Steps>
+
+A plataforma tem proteções próprias contra bloqueio (limite diário de envios e quarentena automática quando detecta risco), mas elas reduzem o risco, não o eliminam.
+
+## Status da conexão
+
+| Status | Significado |
+|---|---|
+| Conectado | Funcionando |
+| Aguardando QR code | Leia o QR code no celular |
+| Desconectado | Reconecte pelo conector |
+| Em quarentena automática | Envios pausados para proteger o número |
+| Banido | O WhatsApp bloqueou o número |

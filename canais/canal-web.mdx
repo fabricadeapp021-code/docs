@@ -1,0 +1,46 @@
+---
+title: "Canal Web (chat no site)"
+description: "Coloque o seu agente para atender no seu site com uma linha de código."
+---
+
+O Canal Web adiciona um balão de chat no canto do seu site. O visitante conversa com o seu agente, com os mesmos prompts, conhecimento e ferramentas dele.
+
+## Instalação
+
+<Steps>
+  <Step title="Ative o Canal Web">
+    Abra o agente e, na seção **Canal Web**, ligue o canal.
+  </Step>
+  <Step title="Libere os domínios">
+    Em **Domínios permitidos**, adicione o endereço do seu site, como `https://seusite.com.br`. O agente só responde em sites dessa lista.
+  </Step>
+  <Step title="Copie o código de instalação">
+    Copie o código exibido em **Código de instalação**. Ele tem este formato:
+
+    ```html
+    <script
+      src="https://api-veronica.caprover.veronica-ai.com.br/public/widget.js"
+      data-agent-id="SEU_AGENT_ID"
+      async
+    ></script>
+    ```
+  </Step>
+  <Step title="Cole no seu site">
+    Cole o código antes do `</body>` em todas as páginas onde o chat deve aparecer. Funciona em WordPress, HTML estático, Wix, Webflow ou qualquer site que aceite um script.
+  </Step>
+</Steps>
+
+<Note>
+  Sem nenhum domínio liberado, o código de instalação não aparece e o agente recusa conversas pelo site, mesmo com o canal ligado.
+</Note>
+
+## Como o chat se comporta
+
+- O chat abre isolado do visual do seu site, sem quebrar o seu CSS.
+- A conversa continua se o visitante navegar entre páginas ou voltar depois, no mesmo navegador.
+- As conversas do site ficam separadas das do WhatsApp e do playground.
+- Para evitar abuso, há um limite de mensagens por minuto por visitante.
+
+## Quer seu próprio componente de chat?
+
+Se preferir construir a interface você mesmo, use a [API do Canal Web](/api/streaming) diretamente.

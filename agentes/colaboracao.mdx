@@ -1,0 +1,33 @@
+---
+title: "Colaboração entre agentes"
+description: "Permita que um agente peça ajuda a outro da mesma empresa, com controle total."
+---
+
+Agentes da mesma empresa podem trabalhar juntos. Por exemplo, a SDR pode perguntar ao agente de operações o status de uma ordem de serviço antes de responder ao cliente.
+
+## Como funciona
+
+<Steps>
+  <Step title="O agente que atende declara serviços">
+    No agente que vai **atender** os pedidos, abra a aba **Colaboração** e crie um **Novo serviço**: nome (ex.: *Consultar status de uma OS*), descrição de quando usar e o que devolve.
+  </Step>
+  <Step title="Você vincula quem pode pedir">
+    No agente que vai **pedir**, marque os serviços dos colegas que ele pode acionar. Nada é liberado até você vincular, e desmarcar revoga na hora.
+  </Step>
+  <Step title="Ligue a capacidade">
+    Ative **Colaboração entre agentes** nas capacidades do agente que pede.
+  </Step>
+</Steps>
+
+## Regras de segurança
+
+- Só agentes da **mesma empresa** colaboram.
+- Só os serviços **declarados e vinculados** podem ser pedidos. A direção importa: A pedir a B não libera B pedir a A.
+- O agente que atende **nunca fala com o cliente**. Ele responde ao colega, que repassa.
+- Em cada serviço, você define termos que **nunca podem aparecer na resposta** (ex.: *custo, margem, preço de venda*). A plataforma filtra antes de devolver.
+- Um pedido não gera outro pedido em cadeia.
+- Todo pedido fica registrado e aparece em **Conversas entre agentes**.
+
+<Note>
+  Só administradores alteram serviços e vínculos. Os demais usuários veem a configuração em modo leitura. A visão geral de quem pede a quem fica em **Funcionários IA → Colaboração**.
+</Note>

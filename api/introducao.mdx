@@ -1,0 +1,47 @@
+---
+title: "Introdução à API"
+description: "Integre seus sistemas com os agentes, leads e documentos da Veronica IA."
+---
+
+A API REST da Veronica IA permite conversar com seus agentes, gerenciar leads e enviar documentos para a base de conhecimento a partir dos seus próprios sistemas.
+
+## URL base
+
+```
+https://api-veronica.caprover.veronica-ai.com.br
+```
+
+## Dois tipos de endpoint
+
+<CardGroup cols={2}>
+  <Card title="Autenticados" icon="key" href="/api/autenticacao">
+    Usam um token de acesso (`Authorization: Bearer ...`). Agem em nome de um usuário da sua empresa e só enxergam os dados dela.
+  </Card>
+  <Card title="Públicos (Canal Web)" icon="globe" href="/api/streaming">
+    Sem token. Usados pelo chat no seu site. Só respondem para agentes com o Canal Web ligado e nos domínios que você liberou.
+  </Card>
+</CardGroup>
+
+## Convenções
+
+- Corpo das requisições e respostas em **JSON** (`Content-Type: application/json`), exceto uploads, que usam `multipart/form-data`.
+- IDs são strings.
+- Datas no formato ISO 8601 (`2026-10-05T14:30:00.000Z`).
+- Respostas de chat em tempo real usam **Server-Sent Events** (SSE). Veja [Streaming](/api/streaming).
+
+## Erros
+
+| Código | Significado |
+|---|---|
+| `400` | Requisição inválida (campo faltando ou em formato errado) |
+| `401` | Token ausente, inválido ou expirado |
+| `403` | Sem permissão (ou, no Canal Web, domínio não autorizado) |
+| `404` | Recurso não encontrado na sua empresa |
+| `429` | Muitas requisições. Aguarde e tente de novo |
+| `503` | Agente indisponível |
+
+Os erros retornam um JSON com `statusCode` e `message`. Nos endpoints de streaming, erros que acontecem depois de a conexão abrir chegam como evento `error`. Veja [Streaming](/api/streaming).
+
+## Isolamento
+
+Todo endpoint autenticado atua **somente na empresa do usuário do token**. Não existe parâmetro para escolher a empresa: ela vem do token. Pedir um agente, lead ou documento de outra empresa retorna `404`.

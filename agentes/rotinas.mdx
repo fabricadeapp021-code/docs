@@ -1,0 +1,27 @@
+---
+title: "Rotinas e follow-up"
+description: "Tarefas agendadas que o agente executa sozinho."
+---
+
+Além de responder, o agente pode trabalhar por conta própria em horários definidos.
+
+## Rotinas agendadas
+
+No perfil do agente, vá em **Rotinas → Nova rotina** e defina:
+
+- **O que fazer**, em linguagem natural. Exemplo: *"Verifique os leads sem resposta nas últimas 24h e envie um follow-up."*
+- **Quando**: frequências prontas (todo dia às 9h, toda segunda às 8h, toda sexta às 17h, a cada hora em horário comercial…) ou **Personalizado** com uma expressão cron, como `0 9 * * 1-5` (dias úteis às 9h).
+
+A rotina usa as mesmas ferramentas e regras do agente.
+
+## Heartbeat
+
+O heartbeat é uma verificação periódica leve. Você escolhe a frequência (de 15 minutos a 8 horas) e o horário ativo (início e fim), e escreve as tarefas em **Prompts → Heartbeat**. Com o arquivo vazio, o heartbeat fica desligado.
+
+## Follow-up automático
+
+Com a capacidade **Follow-up Automático** ligada, o agente retoma conversas com clientes que pararam de responder.
+
+<Tip>
+  Rotinas que enviam mensagens para clientes devem ser testadas primeiro com a frequência **Todo minuto (teste)** em um agente de teste, e depois ajustadas para a frequência real.
+</Tip>

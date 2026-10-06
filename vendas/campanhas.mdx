@@ -1,0 +1,43 @@
+---
+title: "Campanhas"
+description: "Dispare mensagens de WhatsApp para seus leads e deixe o agente continuar a conversa."
+---
+
+Uma campanha envia uma mensagem de WhatsApp para um grupo de leads. Quando o lead responde, **o agente assume a conversa** com todo o contexto da campanha.
+
+## Antes de começar
+
+- O agente precisa ter um [WhatsApp conectado](/canais/whatsapp).
+- Na API oficial, a mensagem inicial precisa ser um **modelo aprovado pela Meta**.
+- Os leads precisam estar cadastrados, de preferência com [tags](/vendas/leads).
+
+## Criar uma campanha
+
+<Steps>
+  <Step title="Escolha o agente e o número">
+    Defina qual agente vai continuar as conversas e por qual número sai o disparo.
+  </Step>
+  <Step title="Escolha o público">
+    Selecione os leads pelas tags. O painel mostra quantos serão atingidos e quantos autorizaram contato por WhatsApp.
+  </Step>
+  <Step title="Escolha a mensagem">
+    Selecione o modelo de mensagem e preencha as variáveis.
+  </Step>
+  <Step title="Dispare e acompanhe">
+    Inicie a campanha e acompanhe em **Monitor**: enviadas, entregues, lidas, respondidas e falhas.
+  </Step>
+</Steps>
+
+## Boas práticas
+
+<AccordionGroup>
+  <Accordion title="Comece pequeno">
+    Dispare primeiro para um lote pequeno (50 a 100 contatos) e acompanhe a taxa de resposta e de falhas antes de enviar para a base toda. A Meta limita o envio de números com baixa qualidade.
+  </Accordion>
+  <Accordion title="Só para quem consentiu">
+    Mensagens para quem não autorizou geram denúncias e derrubam a qualidade do seu número.
+  </Accordion>
+  <Accordion title="Ajuste o agente para a campanha">
+    Inclua no prompt de Comportamento do agente o contexto da campanha (oferta, prazo, próximo passo) para ele saber continuar a conversa.
+  </Accordion>
+</AccordionGroup>

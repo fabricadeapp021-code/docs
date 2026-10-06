@@ -1,0 +1,27 @@
+---
+title: "Slack"
+description: "Converse com o agente pelo Slack e deixe-o enviar mensagens para o seu time."
+---
+
+O conector do Slack serve para duas coisas:
+
+1. **Ferramentas**: o agente envia alertas, resumos e mensagens para canais ou pessoas do seu Slack.
+2. **Canal de entrada**: o seu time conversa com o agente direto pelo Slack.
+
+## Conectar
+
+<Steps>
+  <Step title="Autorize o Slack">
+    Em **Funcionários IA → Conectores**, clique em **Slack** e autorize o acesso ao seu workspace.
+  </Step>
+  <Step title="Defina as permissões do agente">
+    Em **O que este agente pode fazer no Slack**, escolha as ações liberadas e em quais canais. Em **Quem pode receber DM do agente**, limite as mensagens diretas.
+  </Step>
+  <Step title="(Opcional) Converse pelo Slack">
+    Ative **Conversar com este agente pelo Slack**, escolha o **Canal do agente** e convide o bot no canal com `/invite @nome-do-bot`.
+  </Step>
+</Steps>
+
+<Note>
+  Sem nenhum canal liberado, o agente não envia mensagem para canal nenhum. O padrão é negar.
+</Note>

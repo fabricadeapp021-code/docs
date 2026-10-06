@@ -1,0 +1,36 @@
+---
+title: "Perguntas frequentes"
+description: "Respostas rápidas para as dúvidas mais comuns."
+---
+
+<AccordionGroup>
+  <Accordion title="O agente não responde nada. O que verificar?">
+    1. A [chave de IA](/conta/chaves-de-ia) está cadastrada, validada e com saldo?
+    2. O agente está ativo (não arquivado)?
+    3. O [modo de acesso](/agentes/configurar#quem-pode-conversar-com-o-agente) permite aquele número?
+    4. O WhatsApp está com status **Conectado**?
+  </Accordion>
+  <Accordion title="O agente inventou uma informação. Como evitar?">
+    Envie o material correto para a [base de conhecimento](/conhecimento/documentos), ligue o RAG no agente e inclua no prompt de Comportamento a regra: *"se a informação não estiver na base, diga que vai confirmar e encaminhe para um humano"*.
+  </Accordion>
+  <Accordion title="Mudei o prompt e nada mudou.">
+    Confira se você salvou uma nova versão (ela aparece no Histórico). Abra uma **nova sessão** no playground: conversas antigas carregam o contexto anterior.
+  </Accordion>
+  <Accordion title="Um agente vê os dados de outro?">
+    Não. Cada agente tem memória, conhecimento e conectores próprios. A troca entre agentes só acontece pela [colaboração](/agentes/colaboracao), que você libera serviço por serviço.
+  </Accordion>
+  <Accordion title="Outra empresa pode ver meus dados?">
+    Não. Cada empresa é um espaço totalmente isolado: agentes, conversas, documentos, leads e registros.
+  </Accordion>
+  <Accordion title="Posso usar o mesmo número de WhatsApp em dois agentes?">
+    Não. Cada número fica ligado a um único agente. Para vários agentes, use vários números.
+  </Accordion>
+  <Accordion title="Quanto custa a IA?">
+    O uso do modelo é cobrado direto pelo seu provedor (OpenAI, Anthropic etc.) na sua conta. A Veronica IA cobra apenas as [vagas de agente](/conta/planos).
+  </Accordion>
+  <Accordion title="O agente consegue transferir para um humano?">
+    Sim. Descreva no prompt de Comportamento quando ele deve chamar um humano e ative o aviso **"quando precisar de atendimento humano"** em [Chaves de IA → Avisos](/conta/chaves-de-ia#avisos-por-whatsapp).
+  </Accordion>
+</AccordionGroup>
+
+Não achou sua resposta? Fale com o [suporte](https://frontend-veronica.caprover.veronica-ai.com.br/apps/support).

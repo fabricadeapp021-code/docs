@@ -1,0 +1,57 @@
+---
+title: "Conceitos"
+description: "Os blocos que formam um funcionário IA na Veronica IA."
+---
+
+## Empresa
+
+Sua empresa é um espaço totalmente isolado na plataforma. Agentes, conversas, documentos, leads, memória e registros de uma empresa nunca são visíveis para outra.
+
+## Funcionário IA (agente)
+
+Um agente é um funcionário digital com função definida: SDR, atendimento, suporte, financeiro, jurídico e assim por diante. Sua empresa pode ter um ou vários, e cada um é independente:
+
+- prompts e regras próprios;
+- memória própria;
+- base de conhecimento própria;
+- conectores e ferramentas próprios;
+- número de WhatsApp próprio.
+
+Dois agentes do mesmo tipo, mesmo na mesma empresa, não compartilham nada entre si.
+
+## Prompts
+
+O comportamento do agente é definido por um conjunto de arquivos de prompt, editáveis no painel e com histórico de versões:
+
+| Arquivo | O que define |
+|---|---|
+| `IDENTITY.md` | Nome, cargo, marca e forma de se apresentar |
+| `SOUL.md` | Personalidade, valores, tom de voz e limites |
+| `AGENTS.md` | Regras de trabalho, fluxos e quando chamar um humano |
+| `TOOLS.md` | Como usar as ferramentas liberadas (gerado automaticamente) |
+| `USER.md` | Perfil do cliente aprendido nas conversas |
+| `MEMORY.md` | Fatos persistentes que o agente deve lembrar |
+| `HEARTBEAT.md` | Tarefas periódicas (vazio = desligado) |
+| `BOOTSTRAP.md` | Instruções de inicialização |
+
+Veja [Prompts](/agentes/prompts).
+
+## Capacidades
+
+Interruptores que ligam ou desligam recursos do agente: base de conhecimento (RAG), pesquisa na web, leitura de imagem, OCR de manuscrito, follow-up automático, venda ativa, colaboração entre agentes e outros. Tudo vem desligado por padrão: o agente só faz o que você liberar.
+
+## Conectores
+
+Integrações com os sistemas da sua empresa: CRM, agenda, e-mail, planilhas, Slack, webhooks. Ao conectar uma integração a um agente, ele passa a ter as ferramentas daquela integração, e só elas. Se você desconectar, as ferramentas somem do agente. Veja [Conectores](/conectores/visao-geral).
+
+## Base de conhecimento
+
+Documentos que você envia (PDF, DOCX, TXT, imagens) são indexados para que o agente responda com base neles. Veja [Documentos](/conhecimento/documentos).
+
+## Memória
+
+O agente lembra do contexto de cada conversa e, depois que ela termina, extrai aprendizados (preferências, fatos importantes) para usar nas próximas. A memória é sempre separada por empresa e por agente.
+
+## Chave de IA (BYOK)
+
+A Veronica IA usa a **sua** chave do provedor de IA (*bring your own key*). Você escolhe o provedor e o modelo, e paga o uso direto a ele. Veja [Chaves de IA](/conta/chaves-de-ia).

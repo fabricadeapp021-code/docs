@@ -1,0 +1,66 @@
+---
+title: "Autenticação"
+description: "Obtenha e renove o token de acesso da API."
+---
+
+Os endpoints autenticados usam **JWT**. Você troca e-mail e senha de um usuário da sua empresa por um token de acesso e envia esse token em todas as chamadas.
+
+<Tip>
+  Crie um usuário dedicado para integrações (ex.: `integracao@suaempresa.com.br`) com o menor perfil necessário, em vez de usar o login de uma pessoa.
+</Tip>
+
+## 1. Obter o token
+
+```bash
+curl -X POST https://api-veronica.caprover.veronica-ai.com.br/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "integracao@suaempresa.com.br", "password": "sua-senha"}'
+```
+
+```json Resposta
+{
+  "access_token": "eyJhbGciOi...",
+  "refresh_token": "eyJhbGciOi...",
+  "token_type": "Bearer",
+  "expires_in": 604800,
+  "refresh_expires_in": 2592000,
+  "user": {
+    "id": "665f...",
+    "email": "integracao@suaempresa.com.br",
+    "tenantId": "665a...",
+    "role": "ADMIN"
+  }
+}
+```
+
+| Token | Validade |
+|---|---|
+| `access_token` | 7 dias (`expires_in`, em segundos) |
+| `refresh_token` | 30 dias (`refresh_expires_in`, em segundos) |
+
+## 2. Usar o token
+
+Envie o `access_token` no cabeçalho `Authorization`:
+
+```bash
+curl https://api-veronica.caprover.veronica-ai.com.br/crm/leads \
+  -H "Authorization: Bearer eyJhbGciOi..."
+```
+
+## 3. Renovar o token
+
+Antes de o `access_token` expirar, troque o `refresh_token` por um par novo:
+
+```bash
+curl -X POST https://api-veronica.caprover.veronica-ai.com.br/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{"refresh_token": "eyJhbGciOi..."}'
+```
+
+A resposta tem o mesmo formato do login. Guarde o **novo** `refresh_token`.
+
+## Segurança
+
+- Guarde os tokens no servidor, nunca no navegador ou em apps distribuídos.
+- Nunca coloque e-mail e senha no código-fonte. Use variáveis de ambiente ou um cofre de segredos.
+- Se um token vazar, troque a senha do usuário de integração.

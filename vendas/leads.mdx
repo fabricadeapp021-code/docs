@@ -1,0 +1,36 @@
+---
+title: "Leads"
+description: "Cadastre, importe e acompanhe os leads que seus agentes atendem."
+---
+
+Leads são os contatos que seus agentes atendem e acompanham. Eles chegam de três formas:
+
+- **Pelo próprio agente**, que registra o lead durante a conversa (com o conector Gestão de Leads ou o seu CRM);
+- **Pelo Canal Web**, quando o visitante se identifica no chat do site;
+- **Por importação** de planilha ou pela [API](/api/introducao).
+
+## Importar planilha
+
+Importe leads em **CSV** ou **Excel (.xlsx)**, até 5 MB. Baixe o modelo no próprio painel para não errar o formato.
+
+| Coluna | Obrigatória | Exemplo |
+|---|---|---|
+| `tags` | **Sim** | `feirão-outubro, zona-sul` |
+| `nome` | Recomendada | Maria Souza |
+| `telefone` | Recomendada | 5521999990000 |
+| `email` | Recomendada | maria@email.com |
+| `empresa` | Opcional | Souza Ltda |
+| `status` | Opcional | novo |
+| `score` | Opcional | 70 |
+
+<Info>
+  A coluna `tags` é o que permite separar públicos depois, por exemplo para disparar uma [campanha](/vendas/campanhas) só para quem veio de um evento.
+</Info>
+
+### Leads repetidos
+
+Antes de importar, o painel mostra quantos leads são **novos** e quantos já existem (mesmo telefone). Você escolhe se os repetidos devem ser **atualizados** com os dados da planilha ou **ignorados**.
+
+## Consentimento para WhatsApp
+
+Para enviar mensagens ativas (campanhas e follow-up), registre se o lead autorizou contato por WhatsApp, quando e de onde veio a autorização. Mensagens ativas só devem ir para quem consentiu.

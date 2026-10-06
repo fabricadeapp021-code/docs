@@ -1,0 +1,47 @@
+---
+title: "Prompts"
+description: "Edite a identidade, a personalidade e as regras de trabalho do agente, com histórico de versões."
+---
+
+Os prompts são o "manual de trabalho" do agente. Abra o agente e vá em **Prompts**. Cada aba corresponde a um arquivo:
+
+| Aba | Arquivo | Para que serve |
+|---|---|---|
+| Identidade | `IDENTITY.md` | Nome, cargo, empresa e forma de se apresentar |
+| Personalidade | `SOUL.md` | Tom de voz, valores e limites ("nunca prometa prazo") |
+| Comportamento | `AGENTS.md` | Regras de trabalho, fluxos, quando chamar um humano |
+| Ferramentas | `TOOLS.md` | Como usar as ferramentas liberadas |
+| Perfil do Usuário | `USER.md` | O que o agente aprendeu sobre o cliente |
+| Memória | `MEMORY.md` | Fatos que o agente deve lembrar sempre |
+| Heartbeat | `HEARTBEAT.md` | Tarefas periódicas (vazio = desligado) |
+| Bootstrap | `BOOTSTRAP.md` | Instruções executadas quando o agente inicia |
+
+## Salvar uma nova versão
+
+Edite o texto, escreva um **Resumo da alteração** (por exemplo, *"Ajustei o tom de voz para atendimento"*) e salve. A nova versão vale para as próximas mensagens.
+
+Cada salvamento fica no **Histórico**, e você pode comparar ou voltar a uma versão anterior quando quiser.
+
+## Ferramentas são geradas automaticamente
+
+O `TOOLS.md` reflete os conectores ativos do agente. Quando você conecta ou desconecta uma integração, esse arquivo é atualizado. Não liste ferramentas à mão em outros prompts: se o conector for removido, o agente não terá mais aquela ferramenta.
+
+## Boas práticas
+
+<AccordionGroup>
+  <Accordion title="Coloque as regras críticas no começo do Comportamento">
+    Regras como "nunca diga que não temos o produto, ofereça o contato do especialista" funcionam melhor no topo do `AGENTS.md`, em frases curtas e diretas.
+  </Accordion>
+  <Accordion title="Uma regra, uma frase">
+    Evite parágrafos longos. Liste as regras em tópicos, cada uma com uma única instrução.
+  </Accordion>
+  <Accordion title="Dê exemplos de resposta">
+    Mostre como seria uma boa resposta para as situações mais comuns. O agente imita o padrão.
+  </Accordion>
+  <Accordion title="Teste antes e depois">
+    Use o [playground](/agentes/playground) para repetir as mesmas perguntas antes e depois de cada mudança.
+  </Accordion>
+  <Accordion title="Não confie em texto exato">
+    Se um valor precisa ser exato (estágio do funil, ID de lista), ele deve vir do conector, não de uma frase no prompt.
+  </Accordion>
+</AccordionGroup>

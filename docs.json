@@ -1,72 +1,109 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Veronica IA",
+  "description": "Documentação da Veronica IA — plataforma para contratar e operar funcionários de IA com WhatsApp, memória, base de conhecimento e conectores.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#7C3AED",
+    "light": "#A78BFA",
+    "dark": "#6D28D9"
   },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
+  "favicon": "/favicon.png",
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
+  },
+  "api": {
+    "openapi": "api/openapi.json",
+    "playground": {
+      "display": "interactive"
+    },
+    "examples": {
+      "languages": ["curl", "javascript", "python"]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+  "navigation": {
+    "languages": [
+      {
+        "language": "pt-BR",
+        "default": true,
+        "tabs": [
+          {
+            "tab": "Guias",
+            "groups": [
+              {
+                "group": "Comece aqui",
+                "pages": ["index", "primeiros-passos", "conceitos"]
+              },
+              {
+                "group": "Funcionários IA",
+                "pages": [
+                  "agentes/contratar",
+                  "agentes/configurar",
+                  "agentes/prompts",
+                  "agentes/playground",
+                  "agentes/rotinas",
+                  "agentes/colaboracao"
+                ]
+              },
+              {
+                "group": "Canais",
+                "pages": ["canais/whatsapp", "canais/canal-web", "canais/slack"]
+              },
+              {
+                "group": "Conhecimento e conectores",
+                "pages": ["conhecimento/documentos", "conectores/visao-geral"]
+              },
+              {
+                "group": "Vendas",
+                "pages": ["vendas/leads", "vendas/campanhas"]
+              },
+              {
+                "group": "Conta",
+                "pages": ["conta/chaves-de-ia", "conta/usuarios", "conta/planos"]
+              },
+              {
+                "group": "Ajuda",
+                "pages": ["faq"]
+              }
+            ]
+          },
+          {
+            "tab": "API",
+            "groups": [
+              {
+                "group": "Introdução",
+                "pages": ["api/introducao", "api/autenticacao", "api/streaming"]
+              },
+              {
+                "group": "Referência",
+                "openapi": "api/openapi.json"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:support@mintlify.com"
+        "label": "Suporte",
+        "href": "https://frontend-veronica.caprover.veronica-ai.com.br/apps/support"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "label": "Acessar o painel",
+      "href": "https://frontend-veronica.caprover.veronica-ai.com.br"
     }
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
+    "options": ["copy", "view", "chatgpt", "claude"]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "website": "https://veronica-ai.com.br"
     }
   }
 }
