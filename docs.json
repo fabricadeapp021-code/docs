@@ -89,13 +89,13 @@
     "links": [
       {
         "label": "Suporte",
-        "href": "https://frontend-veronica.caprover.veronica-ai.com.br/apps/support"
+        "href": "https://painel.veronica-ai.com.br/apps/support"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Acessar o painel",
-      "href": "https://frontend-veronica.caprover.veronica-ai.com.br"
+      "href": "https://painel.veronica-ai.com.br"
     }
   },
   "contextual": {
