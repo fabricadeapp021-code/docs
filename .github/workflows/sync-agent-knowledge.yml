@@ -1,0 +1,96 @@
+# Mantém a base de conhecimento do agente de suporte igual à documentação publicada.
+#
+# Lê o llms-full.txt que o Mintlify gera (todas as páginas, cada uma com o link de origem)
+# e envia para /agents/:id/knowledge. O nome do arquivo leva o hash do conteúdo: se o
+# arquivo com esse hash já está na base, não há nada a fazer. A versão anterior só é
+# apagada depois que a nova estiver indexada, para o agente nunca ficar sem conhecimento.
+#
+# Secrets necessários (Settings → Secrets and variables → Actions):
+#   VERONICA_API_EMAIL     usuário de integração do tenant dono do agente
+#   VERONICA_API_PASSWORD  senha desse usuário
+#   VERONICA_SUPPORT_AGENT_ID  id do agente de suporte (com RAG ligado)
+name: Sincronizar base do agente de suporte
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sync-agent-knowledge
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      API: https://api-veronica.caprover.veronica-ai.com.br
+      DOCS_URL: https://veronica-ia.mintlify.site/llms-full.txt
+      PREFIX: veronica-docs-
+      EMAIL: ${{ secrets.VERONICA_API_EMAIL }}
+      PASSWORD: ${{ secrets.VERONICA_API_PASSWORD }}
+      AGENT_ID: ${{ secrets.VERONICA_SUPPORT_AGENT_ID }}
+    steps:
+      - name: Sincronizar
+        run: |
+          set -euo pipefail
+
+          if [ -z "$EMAIL" ] || [ -z "$PASSWORD" ] || [ -z "$AGENT_ID" ]; then
+            echo "::notice::Secrets do agente de suporte não configurados; nada a sincronizar."
+            exit 0
+          fi
+
+          TOKEN=$(jq -n --arg e "$EMAIL" --arg p "$PASSWORD" '{email:$e,password:$p}' \
+            | curl -sSf -X POST "$API/auth/login" -H "Content-Type: application/json" -d @- \
+            | jq -r .access_token)
+          echo "::add-mask::$TOKEN"
+          AUTH="Authorization: Bearer $TOKEN"
+
+          list_files() {
+            curl -sSf "$API/agents/$AGENT_ID/knowledge" -H "$AUTH"
+          }
+
+          # Após um push, o Mintlify leva alguns minutos para publicar. Espera até o
+          # conteúdo publicado ainda não estar na base (ou desiste após ~10 min).
+          for attempt in $(seq 1 20); do
+            curl -sSfL "$DOCS_URL" -o docs.md
+            HASH=$(sha256sum docs.md | cut -c1-12)
+            NAME="${PREFIX}${HASH}.md"
+            if ! list_files | jq -e --arg n "$NAME" '.files[] | select(.originalName == $n and .status != "FAILED")' > /dev/null; then
+              break
+            fi
+            if [ "$GITHUB_EVENT_NAME" != "push" ] || [ "$attempt" = 20 ]; then
+              echo "Base já está atualizada ($NAME)."
+              exit 0
+            fi
+            sleep 30
+          done
+
+          echo "Enviando $NAME ($(wc -c < docs.md) bytes)"
+          NEW_ID=$(curl -sSf -X POST "$API/agents/$AGENT_ID/knowledge/upload" -H "$AUTH" \
+            -F "file=@docs.md;type=text/markdown;filename=$NAME" | jq -r .fileId)
+
+          STATUS=PENDING
+          for _ in $(seq 1 40); do
+            STATUS=$(list_files | jq -r --arg id "$NEW_ID" '.files[] | select(._id == $id) | .status')
+            [ "$STATUS" = "PENDING" ] || break
+            sleep 15
+          done
+
+          if [ "$STATUS" != "INDEXED" ]; then
+            echo "::error::Indexação terminou com status '$STATUS'. Mantendo a versão anterior."
+            curl -sSf -X DELETE "$API/agents/$AGENT_ID/knowledge/$NEW_ID" -H "$AUTH" > /dev/null || true
+            exit 1
+          fi
+
+          list_files \
+            | jq -r --arg p "$PREFIX" --arg id "$NEW_ID" '.files[] | select((.originalName | startswith($p)) and ._id != $id) | ._id' \
+            | while read -r OLD_ID; do
+                echo "Removendo versão anterior $OLD_ID"
+                curl -sSf -X DELETE "$API/agents/$AGENT_ID/knowledge/$OLD_ID" -H "$AUTH" > /dev/null
+              done
+
+          echo "Base do agente atualizada: $NAME"
